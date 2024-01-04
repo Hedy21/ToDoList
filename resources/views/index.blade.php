@@ -13,7 +13,6 @@
         {{-- panel 1 start --}}
             <div class="grid col-start-2 col-span-5 bg-slate-300">
                 <div class="">
-
                     <div class="underline text-xl my-4 font-semibold text-center">To-Do(5)</div>
                     <div class="flex justify-between">
                         Total: 25
@@ -78,6 +77,13 @@ $(document).ready(function(){
         }
     });
     });
+
+// Additional code to close the modal
+const my_modal_3 = document.getElementById('my_modal_3');
+
+if (!my_modal_3.showModal) {
+    dialogPolyfill.registerDialog(my_modal_3);
+}
 $('#taskForm').submit(function(e){
    e.preventDefault();
    var formData = new FormData(this);
@@ -88,10 +94,15 @@ $('#taskForm').submit(function(e){
     cache: false,
     contentType: false,
     processData: false,
-    success: (data)=>{console.log(data);},
+    success: (data)=>{
+        console.log(data);
+        my_modal_3.close();
+        $('#taskForm').trigger('reset');
+    },
     error: function(){console.log("error");}
    });
 });
+
 
 </script>
 @endsection
