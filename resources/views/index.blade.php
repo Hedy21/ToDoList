@@ -14,6 +14,26 @@
             <div class="grid col-start-2 col-span-5 bg-slate-300">
                 <div class="">
                     <div class="underline text-xl my-4 font-semibold text-center">To-Do(5)</div>
+                    <div class="flex justify-between">
+                        Total: 25
+                        <button class="mx-9 underline p-1" onclick="my_modal_3.showModal();">Create New</button>
+                        {{-- modal start --}}
+                        <!-- You can open the modal using ID.showModal() method -->
+                            <dialog id="my_modal_3" class="modal">
+                            <div class="modal-box w-96">
+                                <form method="dialog">
+                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                                </form>
+                                <h3 class="font-bold text-lg">Create a new task</h3>
+                                <form action="javascript:void(0)" method="POST" class="my-2">
+                                    <span class="font-semibold">Task Name: </span>
+                                    <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+                                    <input type="submit" value="CREATE" class="btn btn-ghost float-end mt-2">
+                                </form>
+                            </div>
+                            </dialog>
+                        {{-- modal end --}}
+                    </div>
                     @for ($i=1;$i<20;$i++)
                         <div class="flex justify-between border h-auto w-auto mx-9 my-1 text-normal p-1 rounded-xl ">
                             <button class="btn btn-sm btn-success">Done</button>
@@ -48,4 +68,9 @@
         {{-- panel 2 end --}}
 
     </div>
+<script type="text/javascript">
+    function add(){
+        alert('hello');
+    }
+</script>
 @endsection
