@@ -13,6 +13,7 @@
         {{-- panel 1 start --}}
             <div class="grid col-start-2 col-span-5 bg-slate-300">
                 <div class="">
+
                     <div class="underline text-xl my-4 font-semibold text-center">To-Do(5)</div>
                     <div class="flex justify-between">
                         Total: 25
@@ -25,9 +26,10 @@
                                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                 </form>
                                 <h3 class="font-bold text-lg">Create a new task</h3>
-                                <form action="javascript:void(0)" method="POST" class="my-2">
+                                <form action="javascript:void(0)" method="POST" name="taskForm" id="taskForm" class="my-2">
+                                    <input type="hidden" id="id" name="id">
                                     <span class="font-semibold">Task Name: </span>
-                                    <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+                                    <input type="text" name="task" id="task" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
                                     <input type="submit" value="CREATE" class="btn btn-ghost float-end mt-2">
                                 </form>
                             </div>
@@ -69,8 +71,27 @@
 
     </div>
 <script type="text/javascript">
-    function add(){
-        alert('hello');
-    }
+$(document).ready(function(){
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    });
+$('#taskForm').submit(function(e){
+   e.preventDefault();
+   var formData = new FormData(this);
+   $.ajax({
+    type: "POST",
+    url: "{{url('store')}}",
+    data: formData,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: (data)=>{console.log(data);},
+    error: function(){console.log("error");}
+   });
+});
+
 </script>
 @endsection
