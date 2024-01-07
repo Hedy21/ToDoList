@@ -19,4 +19,5 @@ use App\Http\Controllers\TodoListController;
 
 Route::get('/',[TaskController::class,'index']);
 Route::post('store',[TaskController::class,'storeTask']);
+Route::post('edit',[TaskController::class,'editTask']);
 

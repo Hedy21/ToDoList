@@ -30,6 +30,12 @@ class TaskController extends Controller
         return Response()->json($task2);
     }
 
+    public function editTask(Request $req){
+        $where = array('id'=>$req->id);
+        $task = Task::where($where)->first();
+        return response()->json($task);
+    }
+
     //test
     public function testView(){
         return view('test');

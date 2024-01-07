@@ -16,7 +16,7 @@
                     <div class="underline text-xl my-4 font-semibold text-center">To-Do(5)</div>
                     <div class="flex justify-between">
                         Total: {{$count}}
-                        <button class="mx-9 underline p-1" onclick="my_modal_3.showModal();">Create New</button>
+                        <button class="mx-9 underline p-1" onclick="createFunc()">Create New</button>
                         {{-- modal start --}}
                         <!-- You can open the modal using ID.showModal() method -->
                             <dialog id="my_modal_3" class="modal">
@@ -24,12 +24,12 @@
                                 <form method="dialog">
                                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                                 </form>
-                                <h3 class="font-bold text-lg">Create a new task</h3>
+                                <h3 class="font-bold text-lg" id="label">Create a new task</h3>
                                 <form action="javascript:void(0)" method="POST" name="taskForm" id="taskForm" class="my-2">
                                     <input type="hidden" id="id" name="id">
                                     <span class="font-semibold">Task Name: </span>
                                     <input type="text" name="task" id="task" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
-                                    <input type="submit" value="CREATE" class="btn btn-ghost float-end mt-2">
+                                    <input type="submit" value="CREATE" id="modalBtn" class="btn btn-ghost float-end mt-2">
                                 </form>
                             </div>
                             </dialog>
@@ -39,10 +39,10 @@
                     @foreach ($journals as $journal)
                     <div class="flex justify-between border h-auto w-auto mx-9 my-1 text-normal p-1 rounded-xl ">
                         <button class="btn btn-sm btn-success">Done</button>
-                        {{$journal['task']}}
+                        <span id="taskName">{{$journal['task']}}</span>
                         <span class="">
-                            <i class="fa-solid fa-pen m-1"></i>
-                            <i class="fa-solid fa-trash m-1"></i>
+                            <a href="javascript:void(0)" id="editBtn" onclick="editFunc({{$journal['id']}})"><i class="fa-solid fa-pen m-1"></i></a>
+                            <a href="javascript:void(0)" id="deleteBtn" onclick="deleteFunc()"><i class="fa-solid fa-trash m-1"></i></a>
                         </span>
                     </div>
                     @endforeach
@@ -83,9 +83,36 @@ $(document).ready(function(){
 // Additional code to close the modal
 const my_modal_3 = document.getElementById('my_modal_3');
 
-if (!my_modal_3.showModal) {
-    dialogPolyfill.registerDialog(my_modal_3);
+// if (!my_modal_3.showModal) {
+//     dialogPolyfill.registerDialog(my_modal_3);
+// }
+function createFunc(){
+    my_modal_3.showModal();
+    $('#label').html('Create task');
+    $('#modalBtn').val("Create");
+    $('#id').val('');
 }
+
+function editFunc(id){
+    $.ajax({
+        type: "POST",
+        url: "{{ url('edit') }}",
+        data: {id:id},
+        dataType: 'json',
+        success: function(res){
+            console.log(res);
+            my_modal_3.showModal();
+        $('#label').html('Edit task');
+        $('#id').val(res.id);
+        $('#modalBtn').val("Edit");
+        $('#task').val(res.task);
+        },
+        error: function(){
+            console.log("try again Edit");
+        }
+    });
+}
+
 $('#taskForm').submit(function(e){
    e.preventDefault();
    var formData = new FormData(this);
@@ -98,15 +125,22 @@ $('#taskForm').submit(function(e){
     processData: false,
     success: (data)=>{
         console.log(data);
+        if ($('#modalBtn').val() == 'Create') {
         var newTask = '<div class="flex justify-between border h-auto w-auto mx-9 my-1 text-normal p-1 rounded-xl ">' +
-            '<button class="btn btn-sm btn-success">Done</button>' +
-            data.task +
-            '<span class="">' +
-                '<i class="fa-solid fa-pen m-1"></i>' +
-                '<i class="fa-solid fa-trash m-1"></i>' +
-            '</span>' +
-            '</div>';
+        '<button class="btn btn-sm btn-success">Done</button>' +
+        '<span id="taskName">' +
+        data.task +
+        '</span>' +
+        '<span class="">' +
+        '<i class="fa-solid fa-pen m-1"></i>' +
+        '<i class="fa-solid fa-trash m-1"></i>' +
+        '</span>' +
+        '</div>';
         $('#itemsList').append(newTask);
+        }else{
+            $('#taskName').text(data.task);
+        }
+
         my_modal_3.close();
         $('#taskForm').trigger('reset');
     },
@@ -115,5 +149,9 @@ $('#taskForm').submit(function(e){
 });
 
 
+
+function deleteFunc(){
+
+}
 </script>
 @endsection
