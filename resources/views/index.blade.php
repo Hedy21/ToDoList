@@ -15,7 +15,7 @@
                 <div class="">
                     <div class="underline text-xl my-4 font-semibold text-center">To-Do(5)</div>
                     <div class="flex justify-between">
-                        Total: 25
+                        Total: {{$count}}
                         <button class="mx-9 underline p-1" onclick="my_modal_3.showModal();">Create New</button>
                         {{-- modal start --}}
                         <!-- You can open the modal using ID.showModal() method -->
@@ -35,16 +35,18 @@
                             </dialog>
                         {{-- modal end --}}
                     </div>
-                    @for ($i=1;$i<20;$i++)
-                        <div class="flex justify-between border h-auto w-auto mx-9 my-1 text-normal p-1 rounded-xl ">
-                            <button class="btn btn-sm btn-success">Done</button>
-                            Implementation Intention
-                            <span class="">
-                                <i class="fa-solid fa-pen m-1"></i>
-                                <i class="fa-solid fa-trash m-1"></i>
-                            </span>
-                        </div>
-                    @endfor
+                    <div class="" id="itemsList">
+                    @foreach ($journals as $journal)
+                    <div class="flex justify-between border h-auto w-auto mx-9 my-1 text-normal p-1 rounded-xl ">
+                        <button class="btn btn-sm btn-success">Done</button>
+                        {{$journal['task']}}
+                        <span class="">
+                            <i class="fa-solid fa-pen m-1"></i>
+                            <i class="fa-solid fa-trash m-1"></i>
+                        </span>
+                    </div>
+                    @endforeach
+                </div>
                 </div>
 
             </div>
@@ -96,6 +98,15 @@ $('#taskForm').submit(function(e){
     processData: false,
     success: (data)=>{
         console.log(data);
+        var newTask = '<div class="flex justify-between border h-auto w-auto mx-9 my-1 text-normal p-1 rounded-xl ">' +
+            '<button class="btn btn-sm btn-success">Done</button>' +
+            data.task +
+            '<span class="">' +
+                '<i class="fa-solid fa-pen m-1"></i>' +
+                '<i class="fa-solid fa-trash m-1"></i>' +
+            '</span>' +
+            '</div>';
+        $('#itemsList').append(newTask);
         my_modal_3.close();
         $('#taskForm').trigger('reset');
     },

@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 class TaskController extends Controller
 {
     public function index(){
-        return view('index');
+        $count = Task::count();
+        $journals = Task::get()->all();
+        //dd($journals);
+        return view('index',compact('count','journals'));
     }
     public function storeTask(Request $request){
         $taskId = $request->id;
